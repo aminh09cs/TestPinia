@@ -8,27 +8,28 @@
 </template>
 
 <script setup>
-import { useTaskStore } from '../stores/TaskStore';
+// import { useMyTaskStore } from '../stores/MyTaskStore'
+import { useMyTaskStore_ } from '../stores/MyTaskStore_';
 import { ref } from 'vue';
 
 //ref
 const input = ref('');
 //store
-const taskStore = useTaskStore();
+const taskStore = useMyTaskStore_();
 
 //method
 const addTask = () => {
-  console.log(input.value);
-  let id = taskStore.tasks.length + 1;
+  let id = taskStore.state.value.tasks.length + 1;
   if (input.value.length === 0) {
     alert('Noooooooooooooooooooooo');
     return;
   }
   else {
-    taskStore.addTask({
+    taskStore.actions.addTask({
       id: id,
       nameWork: input.value,
-      isCompleted: false
+      isCompleted: false,
+      isProgress: false,
     })
     input.value = '';
   }

@@ -1,9 +1,9 @@
 <template>
   <section class="task-container-detail">
     <h1 class="task-title">PENDING</h1>
-    <button @click="deleteProgress">clear</button>
+    <button @click="deleteProgress" class="clear">Clear All</button>
     <div class="task-left">
-      <div v-for="(task, i) in getTaskNotCompleted" class="task-item" :class="task.isCompleted ? 'blue' : 'red'">
+      <div v-for="(task, i) in getTaskNotCompleted" class="task-item" :key="task.id">
         <div class="task-item-left">
           <span @click="task.isProgress = !task.isProgress">
             <font-awesome-icon icon="fa-solid fa-pen" class="pen" v-if="task.isProgress" />
@@ -16,7 +16,7 @@
     </div>
     <h1 class="task-title">COMPLETED</h1>
     <div class="task-left">
-      <div v-for="(task, i) in getTaskCompleted" class="task-item" :class="task.isCompleted ? 'blue' : 'red'">
+      <div v-for="(task, i) in getTaskCompleted" class="task-item" :key="task.id">
         <div class=" task-item-left">
           <span :class="task.isCompleted ? 'done' : ''">
             <font-awesome-icon icon="fa-solid fa-pen" class="pen" v-if="task.isProgress" />
@@ -30,12 +30,12 @@
   </section>
 </template>
 <script setup>
-import { useTaskStore } from '../stores/TaskStore'
-import { storeToRefs } from 'pinia';
-import { ref } from 'vue';
+import { useMyTaskStore_ } from '../stores/MyTaskStore_'
 import BtnTask from './BtnTask.vue'
-const taskStore = useTaskStore();
-const { getTaskCompleted, getTaskNotCompleted, tasks } = storeToRefs(taskStore);
+const taskStore = useMyTaskStore_();
+const getTaskCompleted = taskStore.getters.getTaskCompleted;
+const getTaskNotCompleted = taskStore.getters.getTaskNotCompleted;
+
 
 //method
 const deleteProgress = () => {
@@ -43,6 +43,19 @@ const deleteProgress = () => {
 }
 </script>
 <style scoped lang="scss">
+.clear {
+  padding: 8px;
+  color: #94ADCF;
+  background-color: #9400D3;
+  border: none;
+  border-radius: 10px;
+  transition: all .5s ease-in-out;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
 .working {
   display: flex;
   align-items: center;
@@ -51,18 +64,12 @@ const deleteProgress = () => {
   width: 100%;
   background-color: rgb(88, 88, 88, 0.2);
   height: 100px;
+  color: #94ADCF;
 
   font-size: 30px;
   border-radius: 20px;
 }
 
-.task-item.red {
-  background-color: #e96969bb;
-}
-
-.task-item.blue {
-  background-color: #00ff62;
-}
 
 .task-container-detail {
   margin-top: 30px;
@@ -121,6 +128,7 @@ const deleteProgress = () => {
         align-items: center;
         gap: 10px;
 
+
         div {
           @media screen and (max-width: 640px) {
             font-size: 12px;
@@ -160,5 +168,6 @@ const deleteProgress = () => {
       }
     }
   }
+
 }
 </style>

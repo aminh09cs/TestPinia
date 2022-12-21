@@ -1,21 +1,21 @@
 <template>
   <div class="task-item-right">
     <span class="task-item-right-icon trash">
-      <font-awesome-icon icon="fa-solid fa-trash" @click="deleteTask(id)" @mouseover="hover = true"
+      <font-awesome-icon icon="fa-solid fa-trash" @click="deleteTask_(id)" @mouseover="hover = true"
         @mouseleave="hover = false" :class="{ trash: hover }" />
       <!-- @mouseover="hover = true"
       @mouseleave="hover = false"
       :class="{ active: hover }" -->
     </span>
     <span class="task-item-right-icon">
-      <font-awesome-icon icon="fa-solid fa-check" v-show="isCompleted === false" @click="task.isCompleted = true" />
+      <font-awesome-icon icon="fa-solid fa-check" v-show="isCompleted === false" @click="task.isCompleted = true"
+        class="check" />
     </span>
   </div>
-</template>
+</template> 
 <script setup>
-import { useTaskStore } from '../stores/TaskStore'
+import { useMyTaskStore_ } from '../stores/MyTaskStore_'
 import { defineProps } from 'vue';
-import { storeToRefs } from 'pinia';
 //props
 const props = defineProps({
   isCompleted: Boolean,
@@ -23,11 +23,14 @@ const props = defineProps({
   id: Number,
 })
 
-const taskStore = useTaskStore();
+const taskStore = useMyTaskStore_();
 
 //methods
-const deleteTask = (id) => {
-  taskStore.deleteTask(id);
+const deleteTask_ = (id) => {
+  taskStore.actions.deleteTask(id);
+  // console.log(id);
+  // console.log("====");
+  // console.log(taskStore.state.value.tasks[0].id);
 }
 //methods
 </script>
@@ -40,7 +43,13 @@ const deleteTask = (id) => {
     font-size: 12px;
   }
 
+  .check {
+    cursor: pointer;
+  }
+
   .trash {
+    cursor: pointer;
+
     &:hover {
       animation: rotation 0.2s infinite alternate;
     }
